@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TaskRequest;
+use App\Models\Manager;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -23,7 +24,8 @@ class TaskController extends Controller
      */
     public function create(): View
     {
-        return view('tasks.create');
+        $managers = Manager::all();
+        return view('tasks.create', compact('managers'));
     }
 
     /**
@@ -49,7 +51,8 @@ class TaskController extends Controller
      */
     public function edit(Task $task): View
     {
-        return view('tasks.edit', compact('task'));
+        $managers = Manager::all();
+        return view('tasks.edit', compact('task', 'managers'));
     }
 
     /**
