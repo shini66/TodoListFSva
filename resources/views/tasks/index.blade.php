@@ -5,6 +5,13 @@
 @endsection
 
 @section('content')
+
+    <x-accordion>
+        <x-accordion-item title="Pendientes">3 tareas</x-accordion-item>
+        <x-accordion-item title="Completadas">8 tareas</x-accordion-item>
+    </x-accordion>
+
+
     <a href="{{ route('tasks.create') }}">Crear</a>
     @forelse ($tasks as $task)
         <div>
@@ -16,7 +23,7 @@
             <form action="{{ route('tasks.destroy', $task) }}" method="POST">
                 @csrf
                 @method('DELETE')
-                <button type submit>
+                <button type="submit">
                     Eliminar
                 </button>
             </form>
