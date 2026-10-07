@@ -8,10 +8,10 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::resources([
-    'managers' => ManagerController::class,
-    'tasks' => TaskController::class,
-]);
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::resource('managers', ManagerController::class);
+    Route::resource('tasks', TaskController::class);
+});
 
 Route::middleware([
     'auth:sanctum',

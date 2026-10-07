@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ManagerRequest;
 use App\Models\Manager;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ManagerController extends Controller
@@ -15,7 +14,7 @@ class ManagerController extends Controller
      */
     public function index(): View
     {
-        return view('managers.index', ['managers' => Manager::latest()->get()]);
+        return view('managers.index', ['managers' => Manager::withCount('tasks')->latest()->get()]);
     }
 
     /**
@@ -41,7 +40,7 @@ class ManagerController extends Controller
      */
     public function show(Manager $manager)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -55,9 +54,10 @@ class ManagerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Manager $manager): RedirectResponse
+    public function update(ManagerRequest $request, Manager $manager): RedirectResponse
     {
         $manager->update($request->validated());
+
         return to_route('managers.index')->with('success', 'Responsable actualizado');
     }
 
@@ -67,6 +67,7 @@ class ManagerController extends Controller
     public function destroy(Manager $manager): RedirectResponse
     {
         $manager->delete();
+
         return to_route('managers.index')->with('success', 'Responsable eliminado');
     }
 }

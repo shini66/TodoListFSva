@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TaskRequest;
 use App\Models\Manager;
 use App\Models\Task;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -16,7 +15,7 @@ class TaskController extends Controller
      */
     public function index(): View
     {
-        return view('tasks.index', ['tasks' => Task::latest()->get()]);
+        return view('tasks.index', ['tasks' => Task::with('manager')->latest()->get()]);
     }
 
     /**
@@ -25,6 +24,7 @@ class TaskController extends Controller
     public function create(): View
     {
         $managers = Manager::all();
+
         return view('tasks.create', compact('managers'));
     }
 
@@ -43,7 +43,7 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -52,15 +52,17 @@ class TaskController extends Controller
     public function edit(Task $task): View
     {
         $managers = Manager::all();
+
         return view('tasks.edit', compact('task', 'managers'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task): RedirectResponse
+    public function update(TaskRequest $request, Task $task): RedirectResponse
     {
         $task->update($request->validated());
+
         return to_route('tasks.index')->with('success', 'Tarea actualizado');
     }
 
@@ -70,6 +72,7 @@ class TaskController extends Controller
     public function destroy(Task $task): RedirectResponse
     {
         $task->delete();
+
         return to_route('tasks.index')->with('success', 'Tarea eliminado');
     }
 }
